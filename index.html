@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>薪資計算器</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        input { margin: 5px; padding: 8px; width: 100px; text-align: center; }
+        button { padding: 10px 15px; margin-top: 10px; cursor: pointer; }
+        #result { margin-top: 20px; font-size: 1.2em; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h2>薪資計算器</h2>
+    
+    <label>小把數量：</label>
+    <input type="number" id="smallTag" placeholder="輸入數量">
+    
+    <label>大把數量：</label>
+    <input type="number" id="largeTag" placeholder="輸入數量">
+
+    <br>
+
+    <label>開始時間（24小時制）：</label>
+    <input type="time" id="startTime">
+    
+    <label>結束時間：</label>
+    <input type="time" id="endTime">
+
+    <br>
+
+    <label>休息時間（分鐘）：</label>
+    <input type="number" id="breakTime" placeholder="輸入分鐘數">
+    
+    <br>
+    <button onclick="calculate()">計算薪水</button>
+
+    <div id="result"></div>
+
+    <script>
+        function calculate() {
+            let smallTag = parseFloat(document.getElementById("smallTag").value) || 0;
+            let largeTag = parseFloat(document.getElementById("largeTag").value) || 0;
+            let startTime = document.getElementById("startTime").value;
+            let endTime = document.getElementById("endTime").value;
+            let breakTime = parseFloat(document.getElementById("breakTime").value) || 0;
+
+            // 檢查時間輸入是否有效
+            if (!startTime || !endTime) {
+                document.getElementById("result").innerHTML = "<p style='color:red;'>請輸入開始和結束時間</p>";
+                return;
+            }
+
+            // 計算小把和大把薪資
+            let smallPay = smallTag * 0.17;
+            let largePay = largeTag * 0.28;
+            let totalPay = smallPay + largePay;
+
+            // 解析時間為小時與分鐘
+            let start = startTime.split(":").map(Number);
+            let end = endTime.split(":").map(Number);
+            let totalMinutes = (end[0] * 60 + end[1]) - (start[0] * 60 + start[1]) - breakTime;
+            let totalHours = totalMinutes > 0 ? totalMinutes / 60 : 1; // 避免除以 0
+
+            // 計算時薪
+            let hourlyWage = totalPay / totalHours;
+
+            // 扣稅 15%
+            let afterTaxPay = totalPay * 0.85;
+            let afterTaxHourly = hourlyWage * 0.85;
+
+            // 顯示結果
+            document.getElementById("result").innerHTML = `
+                <p>小把薪水：$${smallPay.toFixed(2)}</p>
+                <p>大把薪水：$${largePay.toFixed(2)}</p>
+                <p>總工時：${totalHours.toFixed(2)} 小時</p>
+                <p>總薪水：$${totalPay.toFixed(2)}（稅後 $${afterTaxPay.toFixed(2)}）</p>
+                <p>時薪：$${hourlyWage.toFixed(2)}（稅後 $${afterTaxHourly.toFixed(2)}）</p>
+            `;
+        }
+    </script>
+
+</body>
+</html>
