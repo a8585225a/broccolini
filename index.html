@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>broccolini</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 360px;  
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #fff;
+            box-sizing: border-box;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            margin-top: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        @media (max-width: 480px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+            input, button {
+                font-size: 16px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>broccolini</h2>
+        <label>baby：</label>
+        <input type="number" id="small" placeholder="Enter baby amount">
+        
+        <label>family：</label>
+        <input type="number" id="large" placeholder="Enter family amount">
+
+        <label>start (24hour)：</label>
+        <input type="time" id="startTime">
+
+        <label>finish (24hour)：</label>
+        <input type="time" id="endTime">
+
+        <label>rest (min)：</label>
+        <input type="number" id="breakTime" placeholder="Enter rest minutes">
+
+        <button onclick="calculateSalary()">continue</button>
+
+        <div class="result" id="output"></div>
+    </div>
+
+    <script>
+        function calculateSalary() {
+            let smallQty = parseInt(document.getElementById("small").value) || 0;
+            let largeQty = parseInt(document.getElementById("large").value) || 0;
+            let startTime = document.getElementById("startTime").value;
+            let endTime = document.getElementById("endTime").value;
+            let breakTime = parseInt(document.getElementById("breakTime").value) || 0;
+
+            // 計算薪水
+            let smallTotal = smallQty * 0.17;
+            let largeTotal = largeQty * 0.28;
+            let totalSalary = smallTotal + largeTotal;
+
+            // 計算工時
+            let start = new Date("2000-01-01 " + startTime);
+            let end = new Date("2000-01-01 " + endTime);
+            let workMinutes = (end - start) / (1000 * 60) - breakTime;
+            let workHours = workMinutes / 60;
+
+            // 計算時薪
+            let hourlyRate = totalSalary / workHours;
+            let afterTaxSalary = totalSalary * 0.85;
+            let afterTaxHourlyRate = hourlyRate * 0.85;
+
+            // 顯示結果
+            document.getElementById("output").innerHTML = `
+                <p>Day: $${totalSalary.toFixed(2)} (tax: $${afterTaxSalary.toFixed(2)})</p>
+                <p>Hour: $${hourlyRate.toFixed(2)} (tax: $${afterTaxHourlyRate.toFixed(2)})</p>
+            `;
+        }
+    </script>
+
+</body>
+</html>
