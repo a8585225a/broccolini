@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>broccolini薪資計算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            padding: 10px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            margin-top: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        @media (max-width: 480px) {
+            .container {
+                width: 90%;
+                padding: 15px;
+            }
+            input, button {
+                font-size: 16px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>薪資計算器</h2>
+        <label>小把數量：</label>
+        <input type="number" id="small" placeholder="輸入小把數量">
+        
+        <label>大把數量：</label>
+        <input type="number" id="large" placeholder="輸入大把數量">
+
+        <label>開始時間（24小時制）：</label>
+        <input type="time" id="startTime">
+
+        <label>結束時間（24小時制）：</label>
+        <input type="time" id="endTime">
+
+        <label>休息時間（分鐘）：</label>
+        <input type="number" id="breakTime" placeholder="輸入休息分鐘數">
+
+        <button onclick="calculateSalary()">計算薪資</button>
+
+        <div class="result" id="output"></div>
+    </div>
+
+    <script>
+        function calculateSalary() {
+            let smallQty = parseInt(document.getElementById("small").value) || 0;
+            let largeQty = parseInt(document.getElementById("large").value) || 0;
+            let startTime = document.getElementById("startTime").value;
+            let endTime = document.getElementById("endTime").value;
+            let breakTime = parseInt(document.getElementById("breakTime").value) || 0;
+
+            // 計算薪水
+            let smallTotal = smallQty * 0.17;
+            let largeTotal = largeQty * 0.28;
+            let totalSalary = smallTotal + largeTotal;
+
+            // 計算工時
+            let start = new Date("2000-01-01 " + startTime);
+            let end = new Date("2000-01-01 " + endTime);
+            let workMinutes = (end - start) / (1000 * 60) - breakTime;
+            let workHours = workMinutes / 60;
+
+            // 計算時薪
+            let hourlyRate = totalSalary / workHours;
+            let afterTaxSalary = totalSalary * 0.85;
+            let afterTaxHourlyRate = hourlyRate * 0.85;
+
+            // 顯示結果
+            document.getElementById("output").innerHTML = `
+                <p>總薪水：$${totalSalary.toFixed(2)}（稅後 $${afterTaxSalary.toFixed(2)}）</p>
+                <p>時薪：$${hourlyRate.toFixed(2)}（稅後 $${afterTaxHourlyRate.toFixed(2)}）</p>
+            `;
+        }
+    </script>
+
+</body>
+</html>
